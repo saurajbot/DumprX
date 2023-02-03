@@ -1230,8 +1230,8 @@ elif [[ -s "${PROJECT_DIR}"/.gitlab_token ]]; then
 	git checkout -b "${branch}" || { git checkout -b "${incremental}" && export branch="${incremental}"; }
 	find . \( -name "*sensetime*" -o -name "*.lic" \) | cut -d'/' -f'2-' >| .gitignore
 	[[ ! -s .gitignore ]] && rm .gitignore
-	[[ -z "$(git config --get user.email)" ]] && git config user.email "guptasushrut@gmail.com"
-	[[ -z "$(git config --get user.name)" ]] && git config user.name "Sushrut1101"
+	[[ -z "$(git config --get user.email)" ]] && git config user.email "rommirrorer@gmail.com"
+	[[ -z "$(git config --get user.name)" ]] && git config user.name "ksauraj"
 	git add --all
 
 	# Create Subgroup
