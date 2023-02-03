@@ -1313,8 +1313,15 @@ elif [[ -s "${PROJECT_DIR}"/.gitlab_token ]]; then
 			printf "\n<a href=\"${GITLAB_HOST}/%s/%s/-/tree/%s/\">Gitlab Tree</a>" "${GIT_ORG}" "${repo}" "${branch}"
 		} >> "${OUTDIR}"/tg.html
 		TEXT=$(< "${OUTDIR}"/tg.html)
-		rm -rf "${OUTDIR}"/tg.html
-		curl -s "https://api.telegram.org/bot${TG_TOKEN}/sendmessage" --data "text=${TEXT}&chat_id=${CHAT_ID}&parse_mode=HTML&disable_web_page_preview=True" || printf "Telegram Notification Sending Error.\n"
+    mkdir -p /home/runner/work/dumper/dumper/telegram
+		mv "${OUTDIR}"/tg.html /home/runner/work/dumper/dumper/telegram/tg.html
+		curl -s "https://api.telegram.org/bot${TG_TOKEN}/editMessageText" --data "message_id=${M_ID}&text=${TEXT}&chat_id=${C_ID}&parse_mode=HTML&disable_web_page_preview=True" || printf "Telegram Notification Sending Error.\n"
+		curl -s "https://api.telegram.org/bot${TG_TOKEN}/editMessageText" --data "message_id=${MESSAGE_ID}&text=${TEXT}&chat_id=${CHAT_ID}&parse_mode=HTML&disable_web_page_preview=True" || printf "Telegram Notification Sending Error.\n" # Send Edited Message To The Telegram Group In Which /dump Command Is Initiated
+    mv "${OUTDIR}" /home/runner/work/dumper/dumper/dumped
+    ls /home/runner
+    ls /home/runner/dump
+    cat /home/runner/telegram/chat_id
+    cat /home/runner/telegram/msg_id
 	fi
 
 else
