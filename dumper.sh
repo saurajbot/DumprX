@@ -44,6 +44,7 @@ function _usage() {
 	printf "\t *.nb0 | .*chunk* | *.pac | *super*.img | *system*.sin\e[0m\n\n"
 }
 export TELEGRAM_LIVE=true 
+find . -iname ".tgtoken"
 TG_TOKEN=$(< "${PROJECT_DIR}"/.tg_token) 
 CHAT_ID=$(< "${PROJECT_DIR}"/.tg_chat)
 M_ID=$(< "${PROJECT_DIR}"/.tg_mid)
@@ -59,10 +60,14 @@ live_telegram_update2() {
 	curl -s "https://api.telegram.org/bot${TG_TOKEN}/editMessageText" -d "chat_id=$CHAT_ID" -d "message_id=$MESSAGE_ID" -d "text=$MSG" || printf "Telegram Notification Sending =Error.\n"
 }
 msg_dump(){
-    TG_TOKEN=$(< "${PROJECT_DIR}"/.tg_token) 
-    CHAT_ID=$(< "${PROJECT_DIR}"/.tg_chat)
-    M_ID=$(< "${PROJECT_DIR}"/.tg_mid)
-    C_ID=$(< "${PROJECT_DIR}"/.tg_cid)
+    token_path=$(find ${PROJECT_DIR} -iname ".tg_token")
+    chat_path=$(find ${PROJECT_DIR} -iname ".tg_chat")
+    mid_path=$(find ${PROJECT_DIR} -iname ".tg_mid")
+    cid_path=$(find ${PROJECT_DIR} -iname ".tg_cid")
+    TG_TOKEN=$(< "${PROJECT_DIR}"/"${token_path}") 
+    CHAT_ID=$(< "${PROJECT_DIR}"/"${chat_path}")
+    M_ID=$(< "${PROJECT_DIR}"/"${mid_path}")
+    C_ID=$(< "${PROJECT_DIR}"/"${cid_path}")
     printf "${@}"
     MSG=$(printf "${@}")
     live_telegram_update
