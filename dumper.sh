@@ -43,6 +43,13 @@ function _usage() {
 	printf "\t *.emmc.img | *.img.ext4 | system.bin | system-p | payload.bin\n"
 	printf "\t *.nb0 | .*chunk* | *.pac | *super*.img | *system*.sin\e[0m\n\n"
 }
+export TELEGRAM_LIVE=true 
+TG_TOKEN=$(< "${PROJECT_DIR}"/.tg_token) 
+CHAT_ID=$(< "${PROJECT_DIR}"/.tg_chat)
+M_ID=$(< "${PROJECT_DIR}"/.tg_mid)
+C_ID=$(< "${PROJECT_DIR}"/.tg_cid)
+#Send Dump Start Notification and fetch message id, to be used for later live editing
+if [ "$TELEGRAM_LIVE" == true ] ; then MESSAGE_ID=$(curl -X POST -H 'Content-Type: application/json' -d "{\"chat_id\": \"$CHAT_ID\", \"text\": \"sᴛᴀʀᴛɪɴɢ ʙᴏᴛ\", \"disable_notification\": true}" https://api.telegram.org/bot$TG_TOKEN/sendMessage | grep -oP "(\"message_id\":)[0-9]+" | cut -d ":" -f 2) ; fi
 
 # Function for Sending Live Telegram Status
 live_telegram_update() {
