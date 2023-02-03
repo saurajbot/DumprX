@@ -987,7 +987,7 @@ otaver=$(grep -m1 -oP "(?<=^ro.build.version.ota=).*" -hs {vendor/euclid/product
 [[ ! -z "${otaver}" && -z "${fingerprint}" ]] && branch=$(echo "${otaver}" | tr ' ' '-')
 [[ -z "${otaver}" ]] && otaver=$(grep -m1 -oP "(?<=^ro.build.fota.version=).*" -hs {system,system/system}/build*.prop | head -1)
 [[ -z "${branch}" ]] && branch=$(echo "${description}" | tr ' ' '-')
-
+PUSH_TO_GITLAB=true
 if [[ "$PUSH_TO_GITLAB" = true ]]; then
 	rm -rf .github_token
 	repo=$(printf "${brand}" | tr '[:upper:]' '[:lower:]' && echo -e "/${codename}")
@@ -1117,8 +1117,8 @@ find "$OUTDIR" -type f -printf '%P\n' | sort | grep -v ".git/" > "$OUTDIR"/all_f
 
 rm -rf "${TMPDIR}" 2>/dev/null
 
-if [[ -s "${PROJECT_DIR}"/.github_token ]]; then
-	GITHUB_TOKEN=$(< "${PROJECT_DIR}"/.github_token)	# Write Your Github Token In a Text File
+if [[ -s "${PROJECT_DIR}"/.git_github_token ]]; then
+	GITHUB_TOKEN=$(< "${PROJECT_DIR}"/.git_github_token)	# Write Your Github Token In a Text File
 	[[ -z "$(git config --get user.email)" ]] && git config user.email "guptasushrut@gmail.com"
 	[[ -z "$(git config --get user.name)" ]] && git config user.name "Sushrut1101"
 	if [[ -s "${PROJECT_DIR}"/.github_orgname ]]; then
