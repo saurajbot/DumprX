@@ -993,7 +993,8 @@ if [[ "$PUSH_TO_GITLAB" = true ]]; then
 	repo=$(printf "${brand}" | tr '[:upper:]' '[:lower:]' && echo -e "/${codename}")
 else
 	rm -rf .gitlab_token
-	repo=$(echo "${brand}"_"${codename}"_dump | tr '[:upper:]' '[:lower:]')
+  RANDOM=$(date +%s%N | cut -b10-19)
+	repo=$(echo "${brand}"_"${codename}"_dump_${RANDOM} | tr '[:upper:]' '[:lower:]')
 fi
 
 platform=$(echo "${platform}" | tr '[:upper:]' '[:lower:]' | tr -dc '[:print:]' | tr '_' '-' | cut -c 1-35)
