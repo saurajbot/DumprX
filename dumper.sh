@@ -44,11 +44,14 @@ function _usage() {
 	printf "\t *.nb0 | .*chunk* | *.pac | *super*.img | *system*.sin\e[0m\n\n"
 }
 export TELEGRAM_LIVE=true 
-find . -iname ".tgtoken"
-TG_TOKEN=$(< "${PROJECT_DIR}"/.tg_token) 
-CHAT_ID=$(< "${PROJECT_DIR}"/.tg_chat)
-M_ID=$(< "${PROJECT_DIR}"/.tg_mid)
-C_ID=$(< "${PROJECT_DIR}"/.tg_cid)
+    token_path=$(find ${PROJECT_DIR} -iname ".tg_token")
+    chat_path=$(find ${PROJECT_DIR} -iname ".tg_chat")
+    mid_path=$(find ${PROJECT_DIR} -iname ".tg_mid")
+    cid_path=$(find ${PROJECT_DIR} -iname ".tg_cid")
+    TG_TOKEN=$(< "${token_path}")
+    CHAT_ID=$(< "${chat_path}")
+    M_ID=$(< "${mid_path}")
+    C_ID=$(< "${cid_path}")
 #Send Dump Start Notification and fetch message id, to be used for later live editing
 if [ "$TELEGRAM_LIVE" == true ] ; then MESSAGE_ID=$(curl -X POST -H 'Content-Type: application/json' -d "{\"chat_id\": \"$CHAT_ID\", \"text\": \"sᴛᴀʀᴛɪɴɢ ʙᴏᴛ\", \"disable_notification\": true}" https://api.telegram.org/bot$TG_TOKEN/sendMessage | grep -oP "(\"message_id\":)[0-9]+" | cut -d ":" -f 2) ; fi
 
@@ -64,10 +67,10 @@ msg_dump(){
     chat_path=$(find ${PROJECT_DIR} -iname ".tg_chat")
     mid_path=$(find ${PROJECT_DIR} -iname ".tg_mid")
     cid_path=$(find ${PROJECT_DIR} -iname ".tg_cid")
-    TG_TOKEN=$(< "${PROJECT_DIR}"/"${token_path}") 
-    CHAT_ID=$(< "${PROJECT_DIR}"/"${chat_path}")
-    M_ID=$(< "${PROJECT_DIR}"/"${mid_path}")
-    C_ID=$(< "${PROJECT_DIR}"/"${cid_path}")
+    TG_TOKEN=$(< "${token_path}")
+    CHAT_ID=$(< "${chat_path}")
+    M_ID=$(< "${mid_path}")
+    C_ID=$(< "${cid_path}")
     printf "${@}"
     MSG=$(printf "${@}")
     live_telegram_update
