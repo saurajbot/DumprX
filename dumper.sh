@@ -1295,6 +1295,7 @@ elif [[ -s "${PROJECT_DIR}"/.gitlab_token ]]; then
     sudo bash android_tools/setup.sh
     export GIT_TKN=${GIT_TOKEN}
     export TG_API=${TG_BOT_TOKEN}
+    export MESSAGE_ID=${MESSAGE_ID}
     sudo android_tools/tools/dummy_dt.sh "${OUTDIR}"
 	fi
 
