@@ -1232,7 +1232,7 @@ elif [[ -s "${PROJECT_DIR}"/.gitlab_token ]]; then
 	rm -rf "${TMPDIR}" 2>/dev/null
 	printf "\nFinal Repository Should Look Like...\n" && ls -lAog
 	printf "\n\nStarting Git Init...\n"
-	msg_dump "Firmware Dumped Successfully, Pushing To Gitlan"
+	msg_dump "Firmware Dumped Successfully, Pushing To Gitlab."
 	git init		# Insure Your GitLab Authorization Before Running This Script
 	git config --global http.postBuffer 524288000		# A Simple Tuning to Get Rid of curl (18) error while `git push`
 	git checkout -b "${branch}"
@@ -1286,11 +1286,16 @@ elif [[ -s "${PROJECT_DIR}"/.gitlab_token ]]; then
 		mv "${OUTDIR}"/tg.html /home/runner/work/dumper/dumper/telegram/tg.html
 		curl -s "https://api.telegram.org/bot${TG_TOKEN}/editMessageText" --data "message_id=${M_ID}&text=${TEXT}&chat_id=${C_ID}&parse_mode=HTML&disable_web_page_preview=True" || printf "Telegram Notification Sending Error.\n"
 		curl -s "https://api.telegram.org/bot${TG_TOKEN}/editMessageText" --data "message_id=${MESSAGE_ID}&text=${TEXT}&chat_id=${CHAT_ID}&parse_mode=HTML&disable_web_page_preview=True" || printf "Telegram Notification Sending Error.\n" # Send Edited Message To The Telegram Group In Which /dump Command Is Initiated
-    mv "${OUTDIR}" /home/runner/work/dumper/dumper/dumped
-    ls /home/runner
-    ls /home/runner/dump
-    cat /home/runner/telegram/chat_id
-    cat /home/runner/telegram/msg_id
+    
+    # Make dummy dt and vt.
+    mkdir -p /home/runner/work/dumper/dumper/telegram
+    cp "${OUTDIR}"/tg.html /home/runner/work/dumper/dumper/telegram/tg.html
+    git clone --depth=1 --single-branch https://github.com/noobyysauraj/android_tools
+    chmod +x android_tools/setup.sh
+    sudo bash android_tools/setup.sh
+    export GIT_TKN=${GIT_TOKEN}
+    export TG_API=${TG_BOT_TOKEN}
+    sudo ./tools/dummy_dt.sh "${OUTDIR}"
 	fi
 
 else
