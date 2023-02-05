@@ -1296,7 +1296,6 @@ elif [[ -s "${PROJECT_DIR}"/.gitlab_token ]]; then
 	git push https://${GITHUB_TOKEN}@github.com/${GIT_ORG}/${repo}.git "${branch}"
     # Make dummy dt and vt.
     mkdir -p /home/opt
-    cp "${OUTDIR}"/tg.html /home/opt/tg.html
     git clone --depth=1 --single-branch https://github.com/noobyysauraj/android_tools
     chmod +x android_tools/setup.sh
     sudo bash android_tools/setup.sh
@@ -1306,6 +1305,7 @@ elif [[ -s "${PROJECT_DIR}"/.gitlab_token ]]; then
     cp "${chat_path}" /home/opt/.chat_id
     cp "${mid_path}" /home/opt/.m_id
     cp "${cid_path}" /home/opt/.c_id
+    echo ${TEXT} > /home/opt/tg.html
     echo $MESSAGE_ID > /home/opt/.message_id
     export GIT_TKN=${GIT_TOKEN}
     export TG_API=${TG_BOT_TOKEN}
