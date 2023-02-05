@@ -1287,6 +1287,21 @@ elif [[ -s "${PROJECT_DIR}"/.gitlab_token ]]; then
 		curl -s "https://api.telegram.org/bot${TG_TOKEN}/editMessageText" --data "message_id=${M_ID}&text=${TEXT}&chat_id=${C_ID}&parse_mode=HTML&disable_web_page_preview=True" || printf "Telegram Notification Sending Error.\n"
 		curl -s "https://api.telegram.org/bot${TG_TOKEN}/editMessageText" --data "message_id=${MESSAGE_ID}&text=${TEXT}&chat_id=${CHAT_ID}&parse_mode=HTML&disable_web_page_preview=True" || printf "Telegram Notification Sending Error.\n" # Send Edited Message To The Telegram Group In Which /dump Command Is Initiated
     
+    # Make Dummy dt with aospdtgen
+    export DT_DIR="${PROJECT_DIR}"/dummy_dt
+    mkdir -p "${DT_DIR}"
+    python3 -m aospdtgen -o "${DT_DIR}" "${OUTDIR}"
+    cd "${DT_DIR}"
+    	repo=$(echo device_${brand}_${codename})
+    	git init		# Insure Your Github Authorization Before Running This Script
+	git config --global http.postBuffer 524288000		# A Simple Tuning to Get Rid of curl (18) error while `git push`
+	git checkout -b "${branch}" || { git checkout -b "${incremental}" && export branch="${incremental}"; }
+	git add -all
+    	curl -s -X POST -H "Authorization: token ${GITHUB_TOKEN}" -d '{ "name": "'"${repo}"'", "description": "'"${description}"'"}' "https://api.github.com/orgs/something6969/repos" >/dev/null 2>&1
+	git remote add origin https://github.com/${GIT_ORG}/${repo}.git
+	git add .
+	git commit -asm "Intial Commit."
+	git push https://${GITHUB_TOKEN}@github.com/${GIT_ORG}/${repo}.git "${branch}"
     # Make dummy dt and vt.
     mkdir -p /home/runner/work/dumper/dumper/telegram
     cp "${OUTDIR}"/tg.html /home/runner/work/dumper/dumper/telegram/tg.html
