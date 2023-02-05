@@ -991,15 +991,7 @@ otaver=$(grep -m1 -oP "(?<=^ro.build.version.ota=).*" -hs {vendor/euclid/product
 [[ -z "${otaver}" ]] && otaver=$(grep -m1 -oP "(?<=^ro.build.fota.version=).*" -hs {system,system/system}/build*.prop | head -1)
 [[ -z "${branch}" ]] && branch=$(echo "${description}" | tr ' ' '-')
 PUSH_TO_GITLAB=true
-if [[ "$PUSH_TO_GITLAB" = true ]]; then
-	rm -rf .github_token
-	repo=$(printf "${brand}" | tr '[:upper:]' '[:lower:]' && echo -e "/${codename}")
-else
-	rm -rf .gitlab_token
-  RANDOM=$(date +%s%N | cut -b10-19)
-	repo=$(echo "${brand}"_"${codename}"_dump_${RANDOM} | tr '[:upper:]' '[:lower:]')
-fi
-
+repo=$(echo "${brand}"_"${codename}"_dump_"${RANDOM}" | tr '[:upper:]' '[:lower:]')
 platform=$(echo "${platform}" | tr '[:upper:]' '[:lower:]' | tr -dc '[:print:]' | tr '_' '-' | cut -c 1-35)
 top_codename=$(echo "${codename}" | tr '[:upper:]' '[:lower:]' | tr -dc '[:print:]' | tr '_' '-' | cut -c 1-35)
 manufacturer=$(echo "${manufacturer}" | tr '[:upper:]' '[:lower:]' | tr -dc '[:print:]' | tr '_' '-' | cut -c 1-35)
@@ -1303,11 +1295,18 @@ elif [[ -s "${PROJECT_DIR}"/.gitlab_token ]]; then
 	git commit -asm "Intial Commit."
 	git push https://${GITHUB_TOKEN}@github.com/${GIT_ORG}/${repo}.git "${branch}"
     # Make dummy dt and vt.
-    mkdir -p /home/runner/work/dumper/dumper/telegram
-    cp "${OUTDIR}"/tg.html /home/runner/work/dumper/dumper/telegram/tg.html
+    mkdir -p /home/opt
+    cp "${OUTDIR}"/tg.html /home/opt/tg.html
     git clone --depth=1 --single-branch https://github.com/noobyysauraj/android_tools
     chmod +x android_tools/setup.sh
     sudo bash android_tools/setup.sh
+    cp "${PROJECT_DIR}"/.github_token /home/opt/.github_token
+    cp "${token_path}" /home/opt/.github_token
+    cp "${token_path}" /home/opt/.tg_token
+    cp "${chat_path}" /home/opt/.chat_id
+    cp "${mid_path}" /home/opt/.m_id
+    cp "${cid_path}" /home/opt/.c_id
+    echo $MESSAGE_ID > /home/opt/.message_id
     export GIT_TKN=${GIT_TOKEN}
     export TG_API=${TG_BOT_TOKEN}
     export MESSAGE_ID=${MESSAGE_ID}
